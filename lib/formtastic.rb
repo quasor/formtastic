@@ -422,8 +422,10 @@ module Formtastic #:nodoc:
     #
     def inline_errors_for(method, options = nil) #:nodoc:
       if render_inline_errors?
-        errors = @object.errors[method.to_sym]
-        send(:"error_#{@@inline_errors}", [*errors]) if errors.present?
+        errors = [@object.errors[method.to_sym]]
+        errors << [@object.errors[:"#{method}_id"]] if @object.respond_to?(:"#{method}_id")
+        errors = errors.flatten.compact.uniq
+        send(:"error_#{@@inline_errors}", [*errors]) if errors.any?
       else
         nil
       end
