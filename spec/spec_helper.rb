@@ -146,6 +146,7 @@ module FormtasticSpecHelper
     ::Post.stub!(:human_name).and_return('Post')
     ::Post.stub!(:reflect_on_all_validations).and_return([])
     ::Post.stub!(:reflect_on_validations_for).and_return([])
+    ::Post.stub!(:reflections).and_return({})
     ::Post.stub!(:reflect_on_association).and_return do |column_name|
       case column_name
       when :author, :author_status

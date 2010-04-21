@@ -86,6 +86,8 @@ describe 'SemanticFormBuilder#errors_on' do
     
     it "should list all unique errors" do
       ::Formtastic::SemanticFormBuilder.inline_errors = :list
+      ::Post.stub!(:reflections).and_return({:author => mock('reflection', :options => {}, :macro => :belongs_to)})
+      
       @errors.stub!(:[]).with(:author).and_return(['must not be blank'])
       @errors.stub!(:[]).with(:author_id).and_return(['is already taken', 'must not be blank']) # note the duplicate of association
       

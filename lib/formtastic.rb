@@ -423,7 +423,7 @@ module Formtastic #:nodoc:
     def inline_errors_for(method, options = nil) #:nodoc:
       if render_inline_errors?
         errors = [@object.errors[method.to_sym]]
-        errors << [@object.errors[:"#{method}_id"]] if @object.respond_to?(:"#{method}_id")
+        errors << [@object.errors[:"#{method}_id"]] if association_macro_for_method(method) == :belongs_to
         errors = errors.flatten.compact.uniq
         send(:"error_#{@@inline_errors}", [*errors]) if errors.any?
       else
@@ -484,6 +484,12 @@ module Formtastic #:nodoc:
         else
           []
         end
+      end
+      
+      # Returns nil, or a symbol like :belongs_to or :has_many
+      def association_macro_for_method(method) #:nodoc:
+        reflection = self.reflection_for(method)
+        reflection.macro if reflection
       end
 
       # Prepare options to be sent to label
